@@ -4,7 +4,9 @@
 //! printing, no root checks, no service restart - those belong to the callers
 //! (the CLI in `src/cli/update.rs`, the daemon task in `src/daemon`).
 
-use std::process::{Command, Stdio};
+use std::process::Command;
+#[cfg(any(target_os = "linux", target_os = "macos"))]
+use std::process::Stdio;
 
 use anyhow::{Context, Error, Result};
 use reqwest::{Client, RequestBuilder};
@@ -264,7 +266,6 @@ pub fn trigger_detached_restart() {
     #[cfg(not(any(target_os = "linux", target_os = "macos")))]
     {
         tracing::error!("auto-update: self-restart not supported on this platform");
-        return;
     }
 
     #[cfg(any(target_os = "linux", target_os = "macos"))]

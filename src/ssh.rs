@@ -1,3 +1,5 @@
+#![cfg(unix)]
+
 //! Embedded mesh SSH server (`ray firewall ssh on`), Tailscale-style.
 //!
 //! The daemon runs a small SSH server bound to each of this node's mesh IPs on
@@ -861,7 +863,10 @@ mod tests {
         let mut named = UserPolicy::default();
         named.add(&["deploy".to_string(), "ci".to_string()]);
         let banner = auth_banner(&named, &peer, &[SmolStr::new("trade")]).expect("restricted");
-        assert!(banner.contains("ci, deploy"), "users listed sorted: {banner}");
+        assert!(
+            banner.contains("ci, deploy"),
+            "users listed sorted: {banner}"
+        );
     }
 
     #[test]
